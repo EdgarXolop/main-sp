@@ -1,0 +1,6 @@
+[submodule "oauth2-server"]
+	path = oauth2-server
+	url = https://github.com/EdgarXolop/oauth2-server
+[submodule "social-api"]
+	path = social-api
+	url = https://github.com/EdgarXolop/social-api
