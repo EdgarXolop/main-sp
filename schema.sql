@@ -13,7 +13,7 @@ create table users(
     banned tinyint default 0 ,
     password varchar(500) ,
     phone_number varchar(500) 
-);
+)ENGINE = MYISAM;
 
 CREATE UNIQUE INDEX user_index_email
 ON users(user_name);
@@ -21,8 +21,8 @@ ON users(user_name);
 CREATE UNIQUE INDEX user_index_user_name
 ON users(email);
 
-insert into users(user_name,email,first_name,last_name,date_of_birth,banned,password,phone_number) values('abc','abc@gmail.com','abc','123',now(),0,'$2a$08$fL7u5xcvsZl78su29x1ti.dxI.9rYO8t0q5wk2ROJ.1cdR53bmaVG','50212345678');
-insert into users(user_name,email,first_name,last_name,date_of_birth,banned,password,phone_number) values('xolop','xolop@gmail.com','abc','123',now(),0,'$2a$08$fL7u5xcvsZl78su29x1ti.dxI.9rYO8t0q5wk2ROJ.1cdR53bmaVG','50212345678');
+insert into users(user_name,email,first_name,last_name,date_of_birth,banned,password,phone_number) values('abc','abc@mail.com','abc','123',now(),0,'$2a$08$fL7u5xcvsZl78su29x1ti.dxI.9rYO8t0q5wk2ROJ.1cdR53bmaVG','50212345678');
+insert into users(user_name,email,first_name,last_name,date_of_birth,banned,password,phone_number) values('xolop','xolop@mail.com','abc','123',now(),0,'$2a$08$fL7u5xcvsZl78su29x1ti.dxI.9rYO8t0q5wk2ROJ.1cdR53bmaVG','50212345678');
 
 
 select * from users;
@@ -38,13 +38,16 @@ create table conversations(
     updated_at timestamp not null default current_timestamp on update current_timestamp,
     foreign key (id_user_creator) references users(id_user),
     foreign key (id_user_invited) references users(id_user)
-);
+)ENGINE = MYISAM;
 
 select * from conversations;
 
 
 create table posts(
 	id_post bigint auto_increment primary key not null,
-    updated_at timestamp not null default current_timestamp,
+    id_user_creator bigint not null,
+    deleted_at timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp,
     content text
-);
+)ENGINE = MYISAM;
+
