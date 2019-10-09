@@ -4,7 +4,6 @@ services:
 
   mysql:
     image: mysql:8
-    restart: always
     environment:
       MYSQL_DATABASE: 's_schema'
       MYSQL_USER: 'app'
@@ -12,8 +11,6 @@ services:
       MYSQL_ROOT_PASSWORD: 'root'
     ports:
       - '3306:3306'
-    expose:
-      - '3306'
     volumes:
       - my-db:/var/lib/sp/mysql
     networks: 
@@ -22,32 +19,28 @@ services:
   oauth2-server:
     image: oauth2-server
     build: ./oauth2-server
-    restart: always
     volumes:
-      - ./oauth2-server/data
+      - /var/lib/sp/oauth2-server:/var/lib/sp/oauth2-server/data
       - ~/.m2:/root/.m2
     ports:
       - '8081:8081'
-    expose:
-      - '8081'
     networks: 
       - app
-    environment:
-      WAIT_HOSTS: mysql:3306
+    depends_on: 
+      - mysql
 
   social-api:
     image: social-api
     build: ./social-api
-    restart: always
     volumes:
-      - ./social-api/data
+      - /var/lib/sp/social-api:/var/lib/sp/social-api/data
       - ~/.m2:/root/.m2
     ports:
       - '8082:8082'
-    expose:
-      - '8082'
     networks: 
       - app
+    depends_on: 
+      - mysql
 
 volumes:
   my-db:
