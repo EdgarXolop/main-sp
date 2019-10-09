@@ -1,0 +1,48 @@
+version: '3.3'
+
+
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db_umg'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'abc123'
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+    networks: 
+      - app
+
+  redis:
+    image: redis
+    container_name: cache
+    expose:
+      - 6379
+    networks: 
+      - app
+
+  app-server:
+    image: springboot-docker-compose-app:1
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - /data/springboot-docker-compose-app
+    ports:
+      - "8081:8081"
+    networks: 
+      - app
+
+
+volumes:
+  my-db:
+
+
+networks:
+  app:
