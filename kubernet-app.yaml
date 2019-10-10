@@ -1,0 +1,73 @@
+
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "redsocial-config"
+  namespace: "default"
+  labels:
+    app: "redsocial"
+data:
+  MSYQL_USER: "user"
+  MYSQL_PASSWORD: "userabc123"
+  MYSQL_ROOT_PASSWORD: "root"
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "redsocial"
+  namespace: "default"
+  labels:
+    app: "redsocial"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "redsocial"
+  template:
+    metadata:
+      labels:
+        app: "redsocial"
+    spec:
+      containers:
+      - name: "mysql"
+        image: "mysql:8"
+        env:
+        - name: "MSYQL_USER"
+          valueFrom:
+            configMapKeyRef:
+              key: "MSYQL_USER"
+              name: "redsocial-config"
+        - name: "MYSQL_PASSWORD"
+          valueFrom:
+            configMapKeyRef:
+              key: "MYSQL_PASSWORD"
+              name: "redsocial-config"
+        - name: "MYSQL_ROOT_PASSWORD"
+          valueFrom:
+            configMapKeyRef:
+              key: "MYSQL_ROOT_PASSWORD"
+              name: "redsocial-config"
+      - name: "oauth2-server"
+        image: "gcr.io/api-project-964294507683/github.com/edgarxolop/oauth2-server:$SHORT_SHA"
+      - name: "social-api"
+        image: "gcr.io/api-project-964294507683/github.com/edgarxolop/social-api:$SHORT_SHA"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "redsocial-hpa"
+  namespace: "default"
+  labels:
+    app: "redsocial"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "redsocial"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: "Resource"
+    resource:
+      name: "cpu"
+      targetAverageUtilization: 80
