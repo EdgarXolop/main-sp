@@ -3,7 +3,8 @@ version: '3.3'
 services:
 
   mysql:
-    image: mysql:8
+    image: mysql
+    build: ./mysql
     environment:
       MYSQL_DATABASE: 's_schema'
       MYSQL_USER: 'app'
@@ -12,7 +13,7 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - my-db:/var/lib/sp/mysql
+      - my-db:/var/lib/sp/-sp
     networks: 
       - app
 

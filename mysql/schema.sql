@@ -1,9 +1,8 @@
-drop database if exists s_schema;
-create database s_schema;
+create database if not exists s_schema;
 
 use s_schema;
 
-create table users(
+create table if not exists users(
 	id_user bigint auto_increment primary key not null,
     user_name varchar(100) not null,
     email varchar(100) not null,
@@ -15,19 +14,13 @@ create table users(
     phone_number varchar(500) 
 )ENGINE = MYISAM;
 
-CREATE UNIQUE INDEX user_index_email
-ON users(user_name);
-
-CREATE UNIQUE INDEX user_index_user_name
-ON users(email);
-
-insert into users(user_name,email,first_name,last_name,date_of_birth,banned,password,phone_number) values('abc','abc@mail.com','abc','123',now(),0,'$2a$08$fL7u5xcvsZl78su29x1ti.dxI.9rYO8t0q5wk2ROJ.1cdR53bmaVG','50212345678');
-insert into users(user_name,email,first_name,last_name,date_of_birth,banned,password,phone_number) values('xolop','xolop@mail.com','abc','123',now(),0,'$2a$08$fL7u5xcvsZl78su29x1ti.dxI.9rYO8t0q5wk2ROJ.1cdR53bmaVG','50212345678');
+insert ignore into users(user_name,email,first_name,last_name,date_of_birth,banned,password,phone_number) values('abc','abc@mail.com','abc','123',now(),0,'$2a$08$fL7u5xcvsZl78su29x1ti.dxI.9rYO8t0q5wk2ROJ.1cdR53bmaVG','50212345678');
+insert ignore into users(user_name,email,first_name,last_name,date_of_birth,banned,password,phone_number) values('xolop','xolop@mail.com','abc','123',now(),0,'$2a$08$fL7u5xcvsZl78su29x1ti.dxI.9rYO8t0q5wk2ROJ.1cdR53bmaVG','50212345678');
 
 
 select * from users;
 
-create table conversations(
+create table if not exists conversations(
     id_conversation bigint auto_increment primary key not null,
     id_user_creator bigint not null,
     id_user_invited bigint not null,
@@ -43,7 +36,7 @@ create table conversations(
 select * from conversations;
 
 
-create table posts(
+create table if not exists posts(
 	id_post bigint auto_increment primary key not null,
     id_user_creator bigint not null,
     deleted_at timestamp,
@@ -51,3 +44,10 @@ create table posts(
     content text
 )ENGINE = MYISAM;
 
+
+
+create unique index user_index_email
+on users(user_name);
+
+create unique index user_index_user_name
+on users(email);
