@@ -19,7 +19,9 @@ services:
 
   oauth2-server:
     image: oauth2-server
-    build: ./oauth2-server
+    build: 
+      context: oauth2-server
+      dockerfile: Dockerfile
     volumes:
       - /var/lib/sp/oauth2-server:/var/lib/sp/oauth2-server/data
       - ~/.m2:/root/.m2
@@ -32,7 +34,9 @@ services:
 
   social-api:
     image: social-api
-    build: ./social-api
+    build: 
+      context: social-api
+      dockerfile: Dockerfile
     volumes:
       - /var/lib/sp/social-api:/var/lib/sp/social-api/data
       - ~/.m2:/root/.m2
